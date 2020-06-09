@@ -125,7 +125,7 @@ def trace_message(req, key):
         return HttpResponse(json.dumps(tree,indent=2),
                             content_type='application/json',
                             status=200)
-    except Message.DoesNotExit:
+    except Message.DoesNotExist:
         logger.debug('Unknown message: %s' % key)
         return HttpResponse('Unknown message: %s' % key, status=404)
     return HttpResponse('Internal server error', status=500)
@@ -139,7 +139,7 @@ def message(req, key):
         mesg = Message.objects.get(pk=key)
         return HttpResponse(json.dumps(mesg.to_dict(), indent=2),
                             status=200)
-    except Message.DoesNotExit:
+    except Message.DoesNotExist:
         return HttpResponse('Unknown message: %s' % key, status=404)
     
 @csrf_exempt
@@ -301,7 +301,7 @@ def actors(req):
         except Channel.DoesNotExist:
             logger.debug('Unknown channel: %s' % channel)
             return HttpResponse('Unknown channel: %s' % channel, status=404)
-        except Agent.DoesNotExit:
+        except Agent.DoesNotExist:
             logger.debug('Unknown agent: %s' % agent)
             return HttpResponse('Unknown agent: %s' % agent, status=404)
         except:
